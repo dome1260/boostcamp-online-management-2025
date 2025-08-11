@@ -5,9 +5,7 @@ const routes = [
     path: '/',
     name: 'HomePage',
     component: () => import('../pages/Home.vue'),
-    meta: {
-      layout: 'blank'
-    }
+    redirect: { name: 'UserPage' }
   },
   {
     path: '/auth',
