@@ -1,11 +1,41 @@
 <script setup>
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { useUserStore } from '../../../stores/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 
-const login = () => {
-  router.push({ name: 'UserPage' })
+const loading = ref(false)
+const form = reactive({
+  username: '',
+  password: ''
+})
+
+const login = async () => {
+  loading.value = true
+  try {
+    const response = await axios.post('http://localhost:3000/auth/login', {
+      username: form.username,
+      password: form.password
+    })
+
+    userStore.setUser({
+      user: response.data.data.user,
+      accessToken: response.data.data.accessToken,
+      expiresIn: response.data.data.expiresIn
+    })
+
+    router.push({ name: 'UserPage' })
+
+  } catch (error) {
+    console.error('[ERROR] auth login :', error?.message || error)
+  } finally {
+    loading.value = false
+  }
 }
+
 </script>
 
 <template>
@@ -25,6 +55,7 @@ const login = () => {
               Username
             </label>
             <v-text-field
+              v-model="form.username"
               id="login-username-input"
               density="compact"
               variant="outlined" />
@@ -36,6 +67,7 @@ const login = () => {
               Password
             </label>
             <v-text-field
+              v-model="form.password"
               id="login-password-input"
               density="compact"
               variant="outlined"
@@ -43,6 +75,7 @@ const login = () => {
           </v-col>
         </v-row>
         <v-btn
+          :loading="loading"
           type="submit"
           color="primary"
           variant="flat"
