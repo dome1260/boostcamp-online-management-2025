@@ -2,8 +2,10 @@
 import { onMounted, reactive, ref, computed } from 'vue'
 import UserCreate from './components/UserCreate.vue'
 import UserEdit from './components/UserEdit.vue'
-import axios from 'axios'
 import { useUserStore } from '../../stores/user'
+import axios from 'axios'
+
+import ConsentDelete from '../../components/ConsentDelete.vue'
 
 const userStore = useUserStore()
 
@@ -36,10 +38,6 @@ const filter = reactive({
 
 const userAccessToken = computed(() => userStore.userAccessToken)
 
-const deleteUser = (item) => {
-  //
-}
-
 const getUsers = async () => {
   loading.value = true
   try {
@@ -48,7 +46,7 @@ const getUsers = async () => {
       limit: filter.limit
     }).toString()
 
-    const response = await axios.get(`http://localhost:3000/users?${query}`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/users?${query}`, {
       headers: {
         Authorization: `Bearer ${userAccessToken.value}`
       }
@@ -61,6 +59,26 @@ const getUsers = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const deleteUser = async (id) => {
+  loading.value = true
+  try {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken.value}`
+      }
+    })
+    getUsers()
+  } catch (error) {
+    console.error('[ERROR] delete user', error?.message || error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleChangePage = () => {
+  getUsers()
 }
 
 onMounted(() => {
@@ -82,23 +100,19 @@ onMounted(() => {
       :items-per-page="-1">
       <template #[`item.actions`]="{ item }">
         <div class="d-flex ga-2">
-          <UserEdit />
-          <v-btn
-            icon
-            color="red"
-            variant=flat
-            size="36"
-            @click="deleteUser(item)">
-            <v-icon> mdi-trash-can-outline </v-icon>
-          </v-btn>
+          <UserEdit
+            :id="item._id"
+            @refetch="getUsers()" />
+          <ConsentDelete @confirm="deleteUser(item._id)" />
         </div>
       </template>
       <template #bottom>
-        <div class="d-flex justify-end">
+        <div class="d-flex justify-end pt-2">
           <v-pagination
             v-model="filter.page"
             :length="filter.totalPages"
-            :total-visible="5" />
+            :total-visible="5"
+            @update:model-value="handleChangePage" />
           </div>
       </template>
     </v-data-table>

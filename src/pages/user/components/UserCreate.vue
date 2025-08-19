@@ -31,7 +31,7 @@ const updateForm = (_event) => {
 
 const createUser = async () => {
   try {
-    await axios.post('http://localhost:3000/users', form.value, {
+    await axios.post(`${import.meta.env.VITE_API_URL}/users`, form.value, {
       headers: {
         Authorization: `Bearer ${userAccessToken.value}`
       }
