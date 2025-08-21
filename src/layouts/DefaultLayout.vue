@@ -1,18 +1,12 @@
 <script setup>
+import Navbar from '../components/Navbar.vue'
+import NavigationDrawer from '../components/NavigationDrawer.vue'
 </script>
 
 <template>
   <v-app>
-    <v-navigation-drawer>
-      <v-list>
-        <v-list-item>
-          Menu 1
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar>
-      Navbar
-    </v-app-bar>
+    <NavigationDrawer />
+    <Navbar />
     <v-main>
       <RouterView />
     </v-main>

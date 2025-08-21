@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router"
+import { useUserStore } from "../stores/user"
 
 const routes = [
   {
@@ -17,7 +18,8 @@ const routes = [
         name: 'LoginPage',
         component: () => import ('../pages/auth/pages/Login.vue'),
         meta: {
-          layout: 'blank'
+          layout: 'blank',
+          auth: false
         }
       }
     ]
@@ -27,7 +29,8 @@ const routes = [
     name: 'UserPage',
     component: () => import('../pages/user/User.vue'),
     meta: {
-      layout: 'default'
+      layout: 'default',
+      auth: true
     }
   }
 ]
@@ -35,6 +38,23 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore()
+  const currentDate = Math.ceil(Date.now() / 1000)
+
+  if (to.meta?.auth) {
+    if (userStore.userAccessToken && currentDate < userStore.userAuth.expiresIn) {
+      return next()
+    }
+    userStore.clearUser()
+    return next({ name: 'LoginPage' })
+  }
+  if (!to.meta?.auth && userStore.userAccessToken) {
+    return next({ name: 'UserPage' })
+  }
+  return next()
 })
 
 export default router
