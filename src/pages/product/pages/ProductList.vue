@@ -7,7 +7,37 @@ import axios from 'axios';
 const userStore = useUserStore()
 const router = useRouter()
 
-const headers = []
+const headers = [
+  {
+    title: 'Name',
+    value: 'name' // key, value
+  },
+  {
+    title: 'Price',
+    key: 'price',
+    value: (item) => {
+      return item.price.toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    }
+  },
+  {
+    title: 'Category',
+    key: 'category',
+    value: (item) => {
+      return item?.category?.name || '-'
+    }
+  },
+  {
+    title: 'Tags',
+    value: 'tags'
+  },
+  {
+    title: 'Status',
+    value: 'status'
+  }
+]
 const items = ref([])
 const loading = ref(false)
 const filter = reactive({
@@ -21,7 +51,13 @@ const userAccessToken = computed(() => userStore.userAccessToken)
 const getProductByPaginate = async () => {
   loading.value = true
   try {
-    // 
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/products`, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken.value}`
+      }
+    })
+    items.value = response.data.data.docs
+    filter.totalPages = response.data.totalPages
   } catch (error) {
     console.error('[ERROR] product - get product by paginate', error?.message || error)
   } finally {
@@ -33,8 +69,12 @@ const handleChangePage = () => {
   getProductByPaginate()
 }
 
+const goToDetail = (_event, { item: { _id } }) => {
+  router.push({ name: 'ProductDetail', params: { id: _id } })
+}
+
 onMounted(() => {
-  // getProductByPaginate()
+  getProductByPaginate()
 })
 </script>
 
@@ -48,7 +88,18 @@ onMounted(() => {
       :loading="loading"
       :headers="headers"
       :items="items"
-      :items-per-page="-1">
+      :items-per-page="-1"
+      @click:row="goToDetail">
+      <template #[`item.tags`]="{ item }">
+        <div class="d-flex flex-wrap ga-2">
+          <v-chip
+            v-for="(tag, i) in item.tags"
+            :key="i"
+            color="primary">
+            {{ tag.name }}
+          </v-chip>
+        </div>
+      </template>
       <template #bottom>
         <div class="d-flex justify-end">
           <v-pagination
