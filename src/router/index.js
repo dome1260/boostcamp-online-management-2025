@@ -16,21 +16,89 @@ const routes = [
       {
         path: 'login',
         name: 'LoginPage',
-        component: () => import ('../pages/auth/pages/Login.vue'),
+        component: () => import('../pages/auth/pages/Login.vue'),
         meta: {
-          layout: 'blank',
-          auth: false
+          auth: false,
+          layout: 'blank'
         }
       }
     ]
+  },
+  {
+    path: '/product',
+    name: 'ProductPage',
+    component: () => import('../pages/product/Product.vue'),
+    children: [
+      {
+        path: '',
+        name: 'ProductList',
+        component: () => import('../pages/product/pages/ProductList.vue'),
+        meta: {
+          auth: true,
+          layout: 'default',
+          root: 'ProductPage'
+        }
+      },
+      {
+        path: 'create',
+        name: 'ProductCreate',
+        component: () => import('../pages/product/pages/ProductCreate.vue'),
+        meta: {
+          auth: true,
+          layout: 'default',
+          root: 'ProductPage'
+        }
+      },
+      {
+        path: ':id/detail',
+        name: 'ProductDetail',
+        component: () => import('../pages/product/pages/ProductDetail.vue'),
+        meta: {
+          auth: true,
+          layout: 'default',
+          root: 'ProductPage'
+        }
+      },
+      {
+        path: ':id/edit',
+        name: 'ProductEdit',
+        component: () => import('../pages/product/pages/ProductEdit.vue'),
+        meta: {
+          auth: true,
+          layout: 'default',
+          root: 'ProductPage'
+        }
+      }
+    ]
+  },
+  {
+    path: '/category',
+    name: 'CategoryPage',
+    component: () => import('../pages/category/Category.vue'),
+    meta: {
+      auth: true,
+      layout: 'default',
+      root: 'CategoryPage'
+    }
+  },
+  {
+    path: '/tag',
+    name: 'TagPage',
+    component: () => import('../pages/tag/Tag.vue'),
+    meta: {
+      auth: true,
+      layout: 'default',
+      root: 'TagPage'
+    }
   },
   {
     path: '/user',
     name: 'UserPage',
     component: () => import('../pages/user/User.vue'),
     meta: {
+      auth: true,
       layout: 'default',
-      auth: true
+      root: 'UserPage'
     }
   }
 ]
