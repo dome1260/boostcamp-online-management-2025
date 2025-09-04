@@ -89,7 +89,6 @@ onMounted(() => {
 <template>
   <v-container>
     <div class="d-flex justify-between align-center">
-      <h1> User </h1>
       <v-spacer />
       <UserCreate @refetch="getUsers()" />
     </div>

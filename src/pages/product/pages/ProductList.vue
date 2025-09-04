@@ -81,8 +81,14 @@ onMounted(() => {
 <template>
   <v-container>
     <div class="d-flex align-center gap-2">
-      <h1> Product </h1>
       <v-spacer />
+      <v-btn
+        :to="{ name: 'ProductCreate' }"
+        variant="flat"
+        color="primary">
+        <v-icon start> mdi-plus </v-icon>
+        Create Product
+      </v-btn>
     </div>
     <v-data-table
       :loading="loading"

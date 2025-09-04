@@ -19,7 +19,8 @@ const routes = [
         component: () => import('../pages/auth/pages/Login.vue'),
         meta: {
           auth: false,
-          layout: 'blank'
+          layout: 'blank',
+          title: 'Login'
         }
       }
     ]
@@ -36,7 +37,8 @@ const routes = [
         meta: {
           auth: true,
           layout: 'default',
-          root: 'ProductPage'
+          root: 'ProductPage',
+          title: 'Product List'
         }
       },
       {
@@ -46,7 +48,8 @@ const routes = [
         meta: {
           auth: true,
           layout: 'default',
-          root: 'ProductPage'
+          root: 'ProductPage',
+          title: 'Create Product'
         }
       },
       {
@@ -56,7 +59,8 @@ const routes = [
         meta: {
           auth: true,
           layout: 'default',
-          root: 'ProductPage'
+          root: 'ProductPage',
+          title: 'Product Detail'
         }
       },
       {
@@ -66,7 +70,8 @@ const routes = [
         meta: {
           auth: true,
           layout: 'default',
-          root: 'ProductPage'
+          root: 'ProductPage',
+          title: 'Edit Product'
         }
       }
     ]
@@ -78,7 +83,8 @@ const routes = [
     meta: {
       auth: true,
       layout: 'default',
-      root: 'CategoryPage'
+      root: 'CategoryPage',
+      title: 'Category List'
     }
   },
   {
@@ -88,7 +94,8 @@ const routes = [
     meta: {
       auth: true,
       layout: 'default',
-      root: 'TagPage'
+      root: 'TagPage',
+      title: 'Tag List'
     }
   },
   {
@@ -98,7 +105,8 @@ const routes = [
     meta: {
       auth: true,
       layout: 'default',
-      root: 'UserPage'
+      root: 'UserPage',
+      title: 'User List'
     }
   }
 ]

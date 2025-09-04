@@ -78,7 +78,6 @@ onMounted(() => {
 <template>
   <v-container>
     <div class="d-flex align-center gap-2">
-      <h1> Category </h1>
       <v-spacer />
       <CategoryCreate @refetch="getCategoryByPaginate()" />
     </div>
