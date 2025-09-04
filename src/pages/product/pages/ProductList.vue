@@ -89,6 +89,7 @@ onMounted(() => {
       :headers="headers"
       :items="items"
       :items-per-page="-1"
+      disable-sort
       @click:row="goToDetail">
       <template #[`item.tags`]="{ item }">
         <div class="d-flex flex-wrap ga-2">

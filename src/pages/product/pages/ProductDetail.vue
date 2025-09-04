@@ -2,11 +2,13 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '../../../stores/user';
+import { useNotificationStore } from '../../../stores/notification';
 import axios from 'axios';
 
 import ConsentDelete from '../../../components/ConsentDelete.vue';
 
 const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 const route = useRoute()
 const router = useRouter()
 
@@ -38,8 +40,22 @@ const getProductById = async () => {
   }
 }
 
-const deleteProduct = () => {
-  //
+const deleteProduct = async () => {
+  loading.value = true
+  try {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/products/${route.params.id}`, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken.value}`
+      }
+    })
+    router.back()
+    notificationStore.showMessage('Delete product successfully')
+  } catch (error) {
+    console.error('[ERROR] product - delete product by id :', error?.message || error)
+    notificationStore.showMessage(error?.message || error, 'error')
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
