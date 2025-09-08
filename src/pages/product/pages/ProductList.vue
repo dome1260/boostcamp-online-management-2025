@@ -1,16 +1,23 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
-import { useUserStore } from '../../../stores/user';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../../../stores/user';
+import { useNotificationStore } from '../../../stores/notification';
 import axios from 'axios';
 
-const userStore = useUserStore()
 const router = useRouter()
+const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 
 const headers = [
   {
+    title: 'Image',
+    align: 'center',
+    value: 'image'
+  },
+  {
     title: 'Name',
-    value: 'name' // key, value
+    value: 'name'
   },
   {
     title: 'Price',
@@ -60,6 +67,7 @@ const getProductByPaginate = async () => {
     filter.totalPages = response.data.totalPages
   } catch (error) {
     console.error('[ERROR] product - get product by paginate', error?.message || error)
+    notificationStore.showMessage(error?.message || error, 'error')
   } finally {
     loading.value = false
   }
@@ -97,6 +105,14 @@ onMounted(() => {
       :items-per-page="-1"
       disable-sort
       @click:row="goToDetail">
+      <template #[`item.image`]="{ item }">
+        <img
+          v-if="item.image"
+          :src="item.image"
+          class="rounded"
+          height="40">
+        <span v-else> - </span>
+      </template>
       <template #[`item.tags`]="{ item }">
         <div class="d-flex flex-wrap ga-2">
           <v-chip

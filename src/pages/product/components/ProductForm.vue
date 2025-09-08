@@ -6,6 +6,10 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  formImage: {
+    type: Object,
+    required: true
+  },
   tags: {
     type: Array,
     default: () => []
@@ -35,6 +39,13 @@ const handelOnCancel = () => {
   emit('cancel')
 }
 
+const handleUpdateImage = () => {
+  if (props.formImage.file) {
+    props.formImage.src = URL.createObjectURL(props.formImage.file)
+  } else {
+    props.formImage.src = ''
+  }
+}
 </script>
 
 <template>
@@ -42,6 +53,29 @@ const handelOnCancel = () => {
     ref="productFormRef"
     @submit.prevent="handelOnSave()">
     <v-row class="my-1">
+      <v-col
+        cols="12"
+        lg="10"
+        class="py-1">
+        <div class="mb-4">
+          <img
+            v-if="props.formImage.src"
+            :src="props.formImage.src"
+            height="120">
+          <div
+            v-else
+            style="width: fit-content; height: 120px;"
+            class="d-flex justify-center align-center pa-2 bg-grey rounded">
+            Upload Image
+          </div>
+        </div>
+        <v-file-input
+          v-model="formImage.file"
+          density="compact"
+          variant="outlined"
+          accept="image/jpeg, image/png, image/webp"
+          @update:model-value="handleUpdateImage()" />
+      </v-col>
       <v-col
         cols="12"
         lg="6"

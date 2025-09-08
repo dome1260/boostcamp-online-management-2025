@@ -19,6 +19,10 @@ const form = reactive({
   category: '',
   tags: []
 })
+const formImage = reactive({
+  src: '',
+  file: null
+})
 const tags = ref([])
 const categories = ref([])
 
@@ -66,6 +70,7 @@ const getProductById = async () => {
     form.tags = response.data.data.tags.length
       ? response.data.data.tags.map(tag => tag._id)
       : []
+    formImage.src = response.data.data.image || ''
   } catch (error) {
     console.error('[ERROR] product - get product by id :', error?.message || error)
     notificationStore.showMessage(error?.message || error, 'error')
@@ -77,13 +82,25 @@ const getProductById = async () => {
 const updateProduct = async () => {
   loading.value = true
   try {
+    let uploadedUrl = ''
+    if (formImage.file) {
+      const formData = new FormData()
+      formData.append('file', formImage.file)
+      const uploadedResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL}/upload`,
+        formData
+      )
+      uploadedUrl = uploadedResponse.data.data.publicUrl
+    }
+
     await axios.put(
       `${import.meta.env.VITE_API_URL}/products/${route.params.id}`,
       {
         name: form.name,
         price: Number(form.price),
         tags: form.tags,
-        category: form.category
+        category: form.category,
+        image: uploadedUrl
       },
       {
         headers: {
@@ -92,7 +109,9 @@ const updateProduct = async () => {
       }
     )
     router.back()
-    notificationStore.showMessage('Update product successfully')
+    setTimeout(() => {
+      notificationStore.showMessage('Update product successfully')
+    }, 200)
   } catch (error) {
     console.error('[ERROR] product - update product :', error?.message || error)
     notificationStore.showMessage(error?.message || error, 'error')
@@ -124,6 +143,7 @@ onMounted(() => {
       class="pa-4">
       <ProductForm
         :form="form"
+        :form-image="formImage"
         :categories="categories"
         :tags="tags"
         @submit="updateProduct()"
