@@ -14,6 +14,13 @@ const emit = defineEmits(['update:model-value'])
 
 const menus = [
   {
+    title: 'Order',
+    icon: 'mdi-invoice-list-outline',
+    to: 'OrderList',
+    root: 'OrderPage',
+    sub: []
+  },
+  {
     title: 'Product',
     icon: 'mdi-package-variant-closed',
     root: '',

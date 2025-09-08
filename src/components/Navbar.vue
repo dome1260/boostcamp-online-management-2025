@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRoute, useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
@@ -17,6 +17,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:model-value'])
+
+const menu = ref(false)
 
 const isMobile = computed(() => displayBreakpoint.mobile.value)
 
@@ -37,7 +39,9 @@ const handleLogout = () => {
       <v-app-bar-title class="font-weight-bold">
         {{ route.meta?.title || 'Title' }}
       </v-app-bar-title>
-      <v-menu width="150">
+      <v-menu
+        v-model="menu"
+        width="150">
         <template #activator="{ props }">
           <v-btn
             v-bind="props"

@@ -100,7 +100,7 @@ const updateProduct = async () => {
         price: Number(form.price),
         tags: form.tags,
         category: form.category,
-        image: uploadedUrl
+        image: uploadedUrl || formImage.src
       },
       {
         headers: {
