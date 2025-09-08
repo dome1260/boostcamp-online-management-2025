@@ -1,13 +1,24 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRoute, useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+const displayBreakpoint = useDisplay()
 
-const menu = ref(false)
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: true
+  }
+})
+
+const emit = defineEmits(['update:model-value'])
+
+const isMobile = computed(() => displayBreakpoint.mobile.value)
 
 const handleLogout = () => {
   userStore.clearUser()
@@ -17,13 +28,16 @@ const handleLogout = () => {
 
 <template>
   <v-app-bar>
+    <template #prepend>
+      <v-app-bar-nav-icon
+        v-if="isMobile"
+        @click="emit('update:model-value', true)" />
+    </template>
     <v-container class="d-flex justify-space-between align-center">
       <v-app-bar-title class="font-weight-bold">
         {{ route.meta?.title || 'Title' }}
       </v-app-bar-title>
-      <v-menu
-        v-model="menu"
-        width="150">
+      <v-menu width="150">
         <template #activator="{ props }">
           <v-btn
             v-bind="props"
