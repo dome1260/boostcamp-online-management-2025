@@ -25,15 +25,15 @@ const headers = [
     nowrap: true,
   },
   {
+    title: 'Unit Price',
+    value: 'price',
+    align: 'end'
+  },
+  {
     title: 'Quantity',
     value: 'qty',
     align: 'end',
     nowrap: true
-  },
-  {
-    title: 'Unit Price',
-    value: 'price',
-    align: 'end'
   },
   {
     title: 'Total Price',
